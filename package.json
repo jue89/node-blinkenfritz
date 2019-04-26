@@ -1,0 +1,28 @@
+{
+  "name": "blinkenfritz",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Juergen Fitschen <me@jue.yt>",
+  "license": "MIT",
+  "dependencies": {
+    "happiness": "^10.0.2",
+    "jest": "^24.7.1"
+  },
+  "happiness": {
+    "globals": [
+      "jest",
+      "describe",
+      "test",
+      "expect",
+      "beforeEach"
+    ]
+  },
+  "jest": {
+    "automock": false,
+    "clearMocks": true
+  }
+}
