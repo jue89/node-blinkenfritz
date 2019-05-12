@@ -118,27 +118,25 @@ if (!fs.existsSync(spiDev)) {
 }
 
 m = new Main(spiDev);
-x = -1; y = 5;
+x = 15; y = 5;
 m.addPanel([x, y], 'v');
-x += 4;
+x -= 4;
 m.addPanel([x, y], 'v');
-x += 4;
+x -= 4;
 m.addPanel([x, y], 'v');
-x += 4;
+x -= 4;
 m.addPanel([x, y], 'v');
-x += 4;
+x -= 4;
 m.addPanel([x, y], 'v');
-
-// upper row
 y += 6;
 m.addPanel([x, y], 'v');
-x -= 4;
+x += 4;
 m.addPanel([x, y], 'v');
-x -= 4;
+x += 4;
 m.addPanel([x, y], 'v');
-x -= 4;
+x += 4;
 m.addPanel([x, y], 'v');
-x -= 4;
+x += 4;
 m.addPanel([x, y], 'v');
 
 if (process.argv.length < 3) {
