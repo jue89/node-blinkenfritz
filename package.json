@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "happiness && jest",
     "watch": "jest --watchAll"
   },
   "author": "Juergen Fitschen <me@jue.yt>",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "happiness": "^10.0.2",
     "jest": "^24.7.1"
   },
@@ -25,5 +25,8 @@
   "jest": {
     "automock": false,
     "clearMocks": true
+  },
+  "dependencies": {
+    "spi": "^0.2.0"
   }
 }
