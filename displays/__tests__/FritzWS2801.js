@@ -1,7 +1,8 @@
 jest.mock('spi');
 const mockSpi = require('spi');
 
-const Display = require('../display.js');
+const Display = require('../Display.js');
+const FritzWS2801 = require('../FritzWS2801.js');
 
 const hOffsets = [
 	[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0],
@@ -17,9 +18,14 @@ const vOffsets = [
 	[3, -5], [3, -4], [3, -3], [3, -2], [3, -1], [3, 0]
 ];
 
+test('Be instance of Display', () => {
+	const d = new FritzWS2801();
+	expect(d).toBeInstanceOf(Display);
+});
+
 test('Open SPI device', () => {
 	const dev = 'abc';
-	const d = new Display(dev);
+	const d = new FritzWS2801(dev);
 	expect(d.spi).toBeInstanceOf(mockSpi.Spi);
 	expect(mockSpi.Spi.mock.calls[0][0]).toMatch(dev);
 	expect(mockSpi.Spi.mock.calls[0][1]).toMatchObject({maxSpeed: 500000});
@@ -27,31 +33,31 @@ test('Open SPI device', () => {
 });
 
 test('Add horizontal box', () => {
-	const d = new Display();
+	const d = new FritzWS2801();
 	d.addPanel([0, 0], 'h');
 	expect(d.leds).toMatchObject(hOffsets);
 });
 
 test('Add horizontal box with offset', () => {
-	const d = new Display();
+	const d = new FritzWS2801();
 	d.addPanel([6, 4], 'h');
 	expect(d.leds).toMatchObject(hOffsets.map((p) => [p[0] + 6, p[1] + 4]));
 });
 
 test('Add vertical box', () => {
-	const d = new Display();
+	const d = new FritzWS2801();
 	d.addPanel([0, 0], 'v');
 	expect(d.leds).toMatchObject(vOffsets);
 });
 
 test('Add vertical box with offset', () => {
-	const d = new Display();
+	const d = new FritzWS2801();
 	d.addPanel([6, 4], 'v');
 	expect(d.leds).toMatchObject(vOffsets.map((p) => [p[0] + 6, p[1] + 4]));
 });
 
 test('Draw pixel', () => {
-	const d = new Display();
+	const d = new FritzWS2801();
 	d.leds = [[0, 1], [2, 4], [8, 16]];
 	const getPixel = jest.fn((p) => [p[0], p[1], p[0] + p[1]]);
 	d.draw({getPixel});

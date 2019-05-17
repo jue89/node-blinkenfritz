@@ -1,4 +1,5 @@
 const spi = require('spi');
+const Display = require('./Display.js');
 
 const box = {
 	'h': [
@@ -15,8 +16,9 @@ const box = {
 	]
 };
 
-class Display {
+class FritzWS2801 extends Display {
 	constructor (dev) {
+		super();
 		this.spi = new spi.Spi(dev, {maxSpeed: 500000});
 		this.spi.open();
 		this.leds = [];
@@ -46,4 +48,4 @@ class Display {
 	}
 }
 
-module.exports = Display;
+module.exports = FritzWS2801;
