@@ -12,11 +12,13 @@ test('Be instance of Animation', () => {
 test('Setup color', () => {
 	const color = [1, 2, 3];
 	const c = new Color(color);
+	expect(c).toBeDefined();
 	expect(mockCanvas.mock.calls[0][0].defaultColor).toBe(color);
 });
 
 test('Setup default color', () => {
 	const c = new Color();
+	expect(c).toBeDefined();
 	expect(mockCanvas.mock.calls[0][0].defaultColor).toMatchObject([0, 0, 0]);
 });
 
@@ -39,4 +41,4 @@ test('Set new color', () => {
 	const c = new Color();
 	c.setColor(color);
 	expect(mockCanvas.mock.instances[0].defaultColor).toBe(color);
-})
+});
