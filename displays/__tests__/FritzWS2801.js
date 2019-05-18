@@ -24,17 +24,17 @@ test('Be instance of Display', () => {
 });
 
 test('Open SPI device', () => {
-	const dev = 'abc';
-	const d = new FritzWS2801(dev);
+	const path = 'abc';
+	const d = new FritzWS2801({path});
 	expect(d.spi).toBeInstanceOf(mockSpi.Spi);
-	expect(mockSpi.Spi.mock.calls[0][0]).toMatch(dev);
+	expect(mockSpi.Spi.mock.calls[0][0]).toMatch(path);
 	expect(mockSpi.Spi.mock.calls[0][1]).toMatchObject({maxSpeed: 500000});
 	expect(mockSpi.Spi.mock.instances[0].open.mock.calls.length).toBe(1);
 });
 
 test('Add horizontal box', () => {
 	const d = new FritzWS2801();
-	d.addPanel([0, 0], 'h');
+	expect(d.addPanel([0, 0], 'h')).toBe(d);
 	expect(d.leds).toMatchObject(hOffsets);
 });
 

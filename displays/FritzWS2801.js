@@ -17,9 +17,9 @@ const box = {
 };
 
 class FritzWS2801 extends Display {
-	constructor (dev) {
+	constructor (opts = {}) {
 		super();
-		this.spi = new spi.Spi(dev, {maxSpeed: 500000});
+		this.spi = new spi.Spi(opts.path, {maxSpeed: 500000});
 		this.spi.open();
 		this.leds = [];
 	}
@@ -28,6 +28,7 @@ class FritzWS2801 extends Display {
 		box[orientation].forEach((p) => {
 			this.leds.push([p[0] + offset[0], p[1] + offset[1]]);
 		});
+		return this;
 	}
 
 	draw (canvas) {
