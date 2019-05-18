@@ -6,10 +6,11 @@ class Netcat extends Display {
 		super();
 
 		// Store options
-		Object.assign(this, opts);
-		if (this.port === undefined) this.port = 13337;
-		if (this.width === undefined) this.width = 20;
-		if (this.height === undefined) this.height = 12;
+		Object.assign(this, {
+			port: 13337,
+			width: 20,
+			height: 12
+		}, opts);
 
 		// Start server
 		this.clients = [];

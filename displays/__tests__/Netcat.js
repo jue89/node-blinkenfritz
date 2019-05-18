@@ -64,10 +64,10 @@ test('Noop draw if no one is connected', () => {
 
 test('Draw frame', () => {
 	const d = new Netcat();
-	const [r, g, b] = [1, 2, 3]
+	const [r, g, b] = [1, 2, 3];
 	const canvas = {getPixel: jest.fn((p) => {
 		if (p[0] === 0 && p[1] === 0) return [r, g, b];
-		else return [0, 0, 0]
+		else return [0, 0, 0];
 	})};
 	const client = {write: jest.fn()};
 	d.clients.push(client);
