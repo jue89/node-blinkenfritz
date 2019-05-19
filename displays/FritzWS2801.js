@@ -33,10 +33,7 @@ class FritzWS2801 extends Display {
 	}
 
 	draw (canvas) {
-		if (this.busy) {
-			console.error('Dropped frame');
-			return;
-		}
+		if (this.busy) return;
 
 		// Reuse buffer to safe CPU
 		const requiredLength = this.leds.length * 3;

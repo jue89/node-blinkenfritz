@@ -1,8 +1,10 @@
-jest.mock('spi');
-const mockSpi = require('spi');
+jest.mock('spi-node');
+const mockSpi = require('spi-node');
 
 const Display = require('../Display.js');
 const FritzWS2801 = require('../FritzWS2801.js');
+
+const nextLoop = () => new Promise((resolve) => setImmediate(resolve));
 
 const hOffsets = [
 	[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0],
@@ -26,10 +28,9 @@ test('Be instance of Display', () => {
 test('Open SPI device', () => {
 	const path = 'abc';
 	const d = new FritzWS2801({path});
-	expect(d.spi).toBeInstanceOf(mockSpi.Spi);
-	expect(mockSpi.Spi.mock.calls[0][0]).toMatch(path);
-	expect(mockSpi.Spi.mock.calls[0][1]).toMatchObject({maxSpeed: 500000});
-	expect(mockSpi.Spi.mock.instances[0].open.mock.calls.length).toBe(1);
+	expect(d.spi).toBeInstanceOf(mockSpi.SPI);
+	expect(mockSpi.SPI.fromDevicePath.mock.calls[0][0]).toMatch(path);
+	expect(mockSpi.SPI.mock.instances[0].setSpeed.mock.calls[0][0]).toBe(500000);
 });
 
 test('Add horizontal box', () => {
@@ -64,9 +65,22 @@ test('Draw pixel', () => {
 	expect(getPixel.mock.calls[0][0]).toMatchObject([0, 1]);
 	expect(getPixel.mock.calls[1][0]).toMatchObject([2, 4]);
 	expect(getPixel.mock.calls[2][0]).toMatchObject([8, 16]);
-	expect(mockSpi.Spi.mock.instances[0].write.mock.calls[0][0].toString('hex')).toMatch(Buffer.from([
+	expect(mockSpi.SPI.mock.instances[0].write.mock.calls[0][0].toString('hex')).toMatch(Buffer.from([
 		0, 1, 1,
 		2, 4, 6,
 		8, 16, 24
 	]).toString('hex'));
+});
+
+test('Block SPI if another transfer is ongoing', async () => {
+	const d = new FritzWS2801();
+	d.leds = [[0, 1], [2, 4], [8, 16]];
+	const getPixel = jest.fn((p) => [p[0], p[1], p[0] + p[1]]);
+	d.draw({getPixel});
+	expect(mockSpi.SPI.mock.instances[0].write.mock.calls.length).toBe(1);
+	d.draw({getPixel});
+	expect(mockSpi.SPI.mock.instances[0].write.mock.calls.length).toBe(1);
+	await nextLoop();
+	d.draw({getPixel});
+	expect(mockSpi.SPI.mock.instances[0].write.mock.calls.length).toBe(2);
 });
