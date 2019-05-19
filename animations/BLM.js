@@ -5,9 +5,14 @@ const Canvas = require('../Canvas.js');
 class BLM extends Animation {
 	constructor (opts = {}) {
 		super();
+
+		// Store options
 		this.color = opts.color || [255, 0, 128];
 		this.offsetX = opts.offsetX || 0;
 		this.offsetY = opts.offsetY || 0;
+		this.colorCallback = opts.colorCallback;
+
+		// Load data
 		if (opts.filePath) {
 			fs.readFile(opts.filePath, (err, data) => {
 				if (err) throw err;
@@ -64,6 +69,11 @@ class BLM extends Animation {
 
 	getFrame () {
 		if (this.curFrame >= this.frames.length) this.curFrame = 0;
+		if (this.curFrame === 0 && typeof this.colorCallback === 'function') {
+			const newColor = this.colorCallback();
+			if (!Array.isArray(newColor)) return;
+			newColor.forEach((c, n) => { this.color[n] = c; });
+		}
 		return this.frames[this.curFrame++];
 	}
 }

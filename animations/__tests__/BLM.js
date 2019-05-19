@@ -75,3 +75,16 @@ test('Set curFrame back to 0', () => {
 	expect(c.getFrame()).toBe(c.frames[73]);
 	expect(c.getFrame()).toBe(c.frames[0]);
 });
+
+test('Fetch new background color on first frame', () => {
+	const color = [255, 0, 0];
+	const data = blmFile.toString();
+	const newColor = [0, 255, 255];
+	const colorCallback = jest.fn(() => newColor);
+	const c = new BLM({color, data, colorCallback});
+	c.getFrame();
+	expect(color).toMatchObject(newColor);
+	expect(colorCallback.mock.calls.length).toBe(1);
+	c.getFrame();
+	expect(colorCallback.mock.calls.length).toBe(1);
+});
