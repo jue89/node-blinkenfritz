@@ -1,7 +1,10 @@
+const EventEmitter = require('events').EventEmitter;
+
 const PRIOS = 3;
 
-class BlinkenFritz {
+class BlinkenFritz extends EventEmitter {
 	constructor () {
+		super();
 		this.animations = [];
 		for (let i = 0; i < PRIOS; i++) this.animations.push([]);
 		this.displays = [];
@@ -47,6 +50,7 @@ class BlinkenFritz {
 				this.activeAnimation = this.animations[b][a];
 				break;
 			}
+			this.emit('animation', this.activeAnimation);
 		}
 
 		// Abort if no active animation can be found

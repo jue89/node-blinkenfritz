@@ -101,9 +101,12 @@ test('Find next active animation by prio', () => {
 	const a2 = {getFrame: jest.fn(() => frame)};
 	b.animations[1].push(a1);
 	b.animations[2].push(a2);
+	const onAnimation = jest.fn();
+	b.on('animation', onAnimation);
 	expect(b._prepareNextFrame()).toBe(true);
 	expect(b.activeAnimation).toBe(a2);
 	expect(b.nextFrame).toBe(frame);
+	expect(onAnimation.mock.calls[0][0]).toBe(a2);
 });
 
 test('Find next active animation by random', () => {

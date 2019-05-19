@@ -79,3 +79,6 @@ download.then(() => {
 		}
 	});
 }).catch(console.error);
+
+// Logging
+bf.on('animation', (a) => console.log('Playing', a.toString()));
