@@ -38,17 +38,17 @@ const bf = new BlinkenFritz();
 // Setup displays
 bf.addDisplay(new Netcat({port: 13337}));
 if (fs.existsSync(SPIDEV)) {
-	const fritz = new FritzWS2801()
-		.addPanel([16, 6], 'v')
-		.addPanel([12, 6], 'v')
-		.addPanel([8, 6], 'v')
-		.addPanel([4, 6], 'v')
-		.addPanel([0, 6], 'v')
-		.addPanel([0, 0], 'v')
-		.addPanel([4, 0], 'v')
-		.addPanel([8, 0], 'v')
-		.addPanel([12, 0], 'v')
-		.addPanel([16, 0], 'v');
+	const fritz = new FritzWS2801({path: SPIDEV})
+		.addPanel([16, 5], 'v')
+		.addPanel([12, 5], 'v')
+		.addPanel([8, 5], 'v')
+		.addPanel([4, 5], 'v')
+		.addPanel([0, 5], 'v')
+		.addPanel([0, 11], 'v')
+		.addPanel([4, 11], 'v')
+		.addPanel([8, 11], 'v')
+		.addPanel([12, 11], 'v')
+		.addPanel([16, 11], 'v');
 	bf.addDisplay(fritz);
 }
 
@@ -67,7 +67,6 @@ download.then(() => {
 	const offsetY = -1;
 	const blAnimationsRoot = path.join(blRepoDir, 'movies/blmarchive');
 	walkDir(blAnimationsRoot, (filePath) => {
-		console.log(filePath);
 		if (!filePath.endsWith('.blm')) return;
 		if (filePath.indexOf('on-demand') !== -1) return;
 		if (filePath.indexOf('loveletter') !== -1) return;
