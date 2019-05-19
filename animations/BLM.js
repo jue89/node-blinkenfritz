@@ -4,7 +4,8 @@ const Canvas = require('../Canvas.js');
 
 class BLM extends Animation {
 	constructor (opts = {}) {
-		super();
+		const name = opts.filePath ? `BLM: ${opts.filePath}` : `BLM`;
+		super(name);
 
 		// Store options
 		this.color = opts.color || [255, 0, 128];

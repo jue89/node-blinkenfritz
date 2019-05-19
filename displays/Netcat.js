@@ -3,7 +3,7 @@ const Display = require('./Display.js');
 
 class Netcat extends Display {
 	constructor (opts = {}) {
-		super();
+		super(`Netcat: ${opts.port || 13337}`);
 
 		// Store options
 		Object.assign(this, {

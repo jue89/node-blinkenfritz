@@ -1,9 +1,14 @@
 const EventEmitter = require('events').EventEmitter;
 
 class Animation extends EventEmitter {
-	constructor () {
+	constructor (name) {
 		super();
+		this.name = name || '<Unnamed>';
 		this.prio = -1;
+	}
+
+	toString () {
+		return `Animation: ${this.name}`;
 	}
 
 	setPrio (newPrio, interrupt) {

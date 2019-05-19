@@ -18,7 +18,7 @@ const box = {
 
 class FritzWS2801 extends Display {
 	constructor (opts = {}) {
-		super();
+		super(`FritzWS2801: ${opts.path}`);
 		this.spi = SPI.fromDevicePath(opts.path)
 			.setSpeed(500000);
 		this.busy = false;
