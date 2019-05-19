@@ -6,7 +6,7 @@ Description=BlinkenLights
 After=network.target
 [Service]
 Type=simple
-ExecStart=${process.execPath} ${__dirname} ${__dirname}
+ExecStart=${process.execPath} ${__dirname}
 Restart=on-failure
 [Install]
 WantedBy=multi-user.target
