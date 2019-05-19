@@ -28,6 +28,6 @@
     "clearMocks": true
   },
   "dependencies": {
-    "spi": "^0.2.0"
+    "spi-node": "^2.0.3"
   }
 }

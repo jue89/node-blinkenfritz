@@ -1,4 +1,4 @@
-const spi = require('spi');
+const SPI = require('spi-node').SPI;
 const Display = require('./Display.js');
 
 const box = {
@@ -19,8 +19,9 @@ const box = {
 class FritzWS2801 extends Display {
 	constructor (opts = {}) {
 		super();
-		this.spi = new spi.Spi(opts.path, {maxSpeed: 500000});
-		this.spi.open();
+		this.spi = SPI.fromDevicePath(opts.path)
+			.setSpeed(500000);
+		this.busy = false;
 		this.leds = [];
 	}
 
@@ -32,6 +33,11 @@ class FritzWS2801 extends Display {
 	}
 
 	draw (canvas) {
+		if (this.busy) {
+			console.error('Dropped frame');
+			return;
+		}
+
 		// Reuse buffer to safe CPU
 		const requiredLength = this.leds.length * 3;
 		if (!this.buf || this.buf.length !== requiredLength) {
@@ -45,7 +51,12 @@ class FritzWS2801 extends Display {
 			this.buf[j + 2] = b;
 		}
 
-		this.spi.write(this.buf);
+		this.busy = true;
+		this.spi.write(this.buf).catch((err) => {
+			console.log(err);
+		}).then(() => {
+			this.busy = false;
+		});
 	}
 }
 
