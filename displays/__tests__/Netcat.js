@@ -81,11 +81,11 @@ test('Draw frame', () => {
 	expect(canvas.getPixel.mock.calls[3][0]).toMatchObject([1, 1]);
 	expect(client.write.mock.calls[0][0]).toMatch([
 		`\x1b[2J\n`,
-		`\x1b[38;2;${r};${g};${b}m•\x1b[0m`,
-		` `,
+		`\x1b[38;2;${r};${g};${b}m██\x1b[0m`,
+		`  `,
 		`\n`,
-		` `,
-		` `,
+		`  `,
+		`  `,
 		`\n`
 	].join(''));
 });

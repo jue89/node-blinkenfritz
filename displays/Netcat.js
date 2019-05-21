@@ -31,9 +31,9 @@ class Netcat extends Display {
 			for (let x = 0; x < this.width; x++) {
 				const [r, g, b] = canvas.getPixel([x, y]);
 				if (r === 0 && g === 0 && b === 0) {
-					frame += ` `;
+					frame += `  `;
 				} else {
-					frame += `\x1b[38;2;${r};${g};${b}m•\x1b[0m`;
+					frame += `\x1b[38;2;${r};${g};${b}m██\x1b[0m`;
 				}
 			}
 			frame += `\n`;
