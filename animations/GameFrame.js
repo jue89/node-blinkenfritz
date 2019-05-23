@@ -202,11 +202,11 @@ class GameFrame extends Animation {
 				}
 				this.frames.push({canvas, duration, lastFrame});
 				let moved = false;
-				if (moveX > 0 && anchorX < stopX || moveX < 0 && anchorX > stopX) {
+				if ((moveX > 0 && anchorX < stopX) || (moveX < 0 && anchorX > stopX)) {
 					anchorX += moveX;
 					moved = true;
 				}
-				if (moveY > 0 && anchorY < stopY || moveY < 0 && anchorY > stopY) {
+				if ((moveY > 0 && anchorY < stopY) || (moveY < 0 && anchorY > stopY)) {
 					anchorY += moveY;
 					moved = true;
 				}
