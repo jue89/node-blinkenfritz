@@ -88,7 +88,7 @@ class BMPFile {
 
 class GameFrame extends Animation {
 	constructor (opts = {}) {
-		super(`${opts.dir}`);
+		super(`GameFrame: ${opts.dir}`);
 		this.framePtr = 0;
 		this.loopPtr = 0;
 		this.loopDuration = opts.loopDuration || 8000;
@@ -111,14 +111,15 @@ class GameFrame extends Animation {
 			},
 			translate: {
 				moveX: 0,
-				moveY: 0
+				moveY: 0,
+				loop: true,
+				panoff: false
 			}
 		};
 		if (files.includes('config.ini')) {
 			const data = await readFile(path.join(dir, 'config.ini'));
 			const lines = data.toString().split(/[\r\n]{1,2}/).map((line) => line.trim());
 			const c = ini.parse(lines.join('\n'));
-			console.log(c);
 			if (c.animation) {
 				if (c.animation.hold !== undefined) {
 					config.animation.hold = parseInt(c.animation.hold);
