@@ -9,19 +9,24 @@ test('Be instance of Animation', () => {
 });
 
 test('Read single image', async () => {
+	const loopDuration = 1234;
+	Date.now = jest.fn(() => 0);
 	const g = new GameFrame({
 		dir: path.join(__dirname, 'GameFrame.data.simple'),
-		loopCnt: 3
+		loopDuration
 	});
 	expect(g.prio).toBe(-1);
 	await new Promise((resolve) => g.once('prio', () => resolve()));
 	expect(g.prio).toBe(0);
+	Date.now.mockReturnValue(0);
 	const frame = g.getFrame();
 	expect(frame.duration).toBe(200);
 	expect(frame.lastFrame).toBe(false);
 	expect(frame.canvas.getPixel([10, 12])).toMatchObject([240, 90, 35]);
 	expect(frame.canvas.getPixel([10, 2])).toMatchObject([113, 197, 207]);
+	Date.now.mockReturnValue(loopDuration - 1);
 	expect(g.getFrame().lastFrame).toBe(false);
+	Date.now.mockReturnValue(loopDuration);
 	expect(g.getFrame().lastFrame).toBe(true);
 });
 
@@ -54,7 +59,10 @@ test('Read moving images y', async () => {
 });
 
 test('Read moving images x', async () => {
+	Date.now = () => 0;
 	const g = new GameFrame({dir: path.join(__dirname, 'GameFrame.data.moveimgx')});
 	await new Promise((resolve) => g.once('prio', () => resolve()));
 	expect(g.frames.length).toBe(28);
+	for (let i = 0; i < 27; i++) expect(g.getFrame().lastFrame).toBe(false);
+	expect(g.getFrame().lastFrame).toBe(true);
 });

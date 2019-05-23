@@ -79,9 +79,9 @@ class BMPFile {
 		if (this.flip) y = this.h - 1 - y;
 		const idx = this.wBytes * y + x * 3;
 		return [
-			this.img.data[idx + 2], // R  ... who ever
-			this.img.data[idx + 1], // G  defined it this way
-			this.img.data[idx + 0]  // B  was drunk ... at least ...
+			this.img.data[idx + 2], // R
+			this.img.data[idx + 1], // G
+			this.img.data[idx + 0]  // B
 		];
 	}
 }
@@ -91,7 +91,7 @@ class GameFrame extends Animation {
 		super(`${opts.dir}`);
 		this.framePtr = 0;
 		this.loopPtr = 0;
-		this.loopCnt = opts.loopCnt || 10;
+		this.loopDuration = opts.loopDuration || 8000;
 		if (opts.dir) this.parse(opts.dir).catch((e) => this.emit('error', e));
 	}
 
@@ -132,6 +132,9 @@ class GameFrame extends Animation {
 				if (c.translate.moveY !== undefined) {
 					config.translate.moveY = parseInt(c.translate.moveY);
 				}
+				if (c.translate.loop !== undefined) {
+					config.translate.loop = c.translate.loop;
+				}
 			}
 		}
 
@@ -169,16 +172,29 @@ class GameFrame extends Animation {
 			}
 		}
 
+		// If config tells us not to loop, just set the loop duration to 0.
+		// This will always set the last frame's lastFrame flag to true.
+		if (config.animation.loop === false || config.translate.loop === false) {
+			this.loopDuration = 0;
+		}
+
 		this.setPrio(0);
 	}
 
 	getFrame () {
+		// If we entred the loop, we track the starting point in time
+		if (this.loopStartedAt === undefined) this.loopStartedAt = Date.now();
+
 		const frame = this.frames[this.framePtr++];
+
+		// Last frame?
 		if (this.framePtr === this.frames.length) {
 			this.framePtr = 0;
-			if (++this.loopPtr === this.loopCnt) {
+
+			// Is it time to break the endless loop?
+			if (Date.now() >= this.loopStartedAt + this.loopDuration) {
 				frame.lastFrame = true;
-				this.loopPtr = 0;
+				delete this.loopStartedAt;
 			} else {
 				frame.lastFrame = false;
 			}
