@@ -116,7 +116,9 @@ class GameFrame extends Animation {
 		};
 		if (files.includes('config.ini')) {
 			const data = await readFile(path.join(dir, 'config.ini'));
-			const c = ini.parse(data.toString());
+			const lines = data.toString().split(/[\r\n]{1,2}/).map((line) => line.trim());
+			const c = ini.parse(lines.join('\n'));
+			console.log(c);
 			if (c.animation) {
 				if (c.animation.hold !== undefined) {
 					config.animation.hold = parseInt(c.animation.hold);
