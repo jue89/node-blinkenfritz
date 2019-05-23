@@ -79,9 +79,9 @@ class BMPFile {
 		if (this.flip) y = this.h - 1 - y;
 		const idx = this.wBytes * y + x * 3;
 		return [
-			this.img.data[idx + 2], // R
-			this.img.data[idx + 1], // G
-			this.img.data[idx + 0]  // B
+			this.img.data[idx + 2] || 0, // R
+			this.img.data[idx + 1] || 0, // G
+			this.img.data[idx + 0] || 0  // B
 		];
 	}
 }
@@ -135,6 +135,9 @@ class GameFrame extends Animation {
 				if (c.translate.loop !== undefined) {
 					config.translate.loop = c.translate.loop;
 				}
+				if (c.translate.panoff !== undefined) {
+					config.translate.panoff = c.translate.panoff;
+				}
 			}
 		}
 
@@ -145,30 +148,59 @@ class GameFrame extends Animation {
 		const duration = config.animation.hold;
 		const lastFrame = false;
 		for (let i = 0; files.includes(`${i}.bmp`); i++) {
+			// Read BMP file
 			const data = await readFile(path.join(dir, `${i}.bmp`));
 			const bmp = new BMPFile(data);
-			let offsetX = 0;
-			let offsetY = 0;
+
+			// Calc translation stuff
+			const moveX = config.translate.moveX;
+			const moveY = config.translate.moveY;
+			const panoff = config.translate.panoff;
+			let anchorX, anchorY;
+			let stopX, stopY;
+			if (moveX < 0) {
+				anchorX = (panoff) ? bmp.w : bmp.w - 16;
+				stopX = (panoff) ? -16 : 0;
+			} else if (moveX > 0) {
+				anchorX = (panoff) ? -16 : 0;
+				stopX = (panoff) ? bmp.w : bmp.w - 16;
+			} else {
+				anchorX = 0;
+				stopX = 0;
+			}
+			if (moveY < 0) {
+				anchorY = (panoff) ? bmp.h : bmp.h - 16;
+				stopY = (panoff) ? -16 : 0;
+			} else if (moveY > 0) {
+				anchorY = (panoff) ? -16 : 0;
+				stopY = (panoff) ? bmp.h : bmp.h - 16;
+			} else {
+				anchorY = 0;
+				stopY = 0;
+			}
+
+			// Convert BMP to canvas(es)
 			while (true) {
 				const canvas = new Canvas({width, height});
 				for (let y = 0; y < height; y++) {
 					for (let x = 0; x < width; x++) {
 						canvas.setPixel(
 							[x, y],
-							bmp.getPixel([x + offsetX, y + offsetY])
+							bmp.getPixel([x + anchorX, y + anchorY])
 						);
 					}
 				}
 				this.frames.push({canvas, duration, lastFrame});
-				if (config.translate.moveY) {
-					offsetY += config.translate.moveY;
-					if (offsetY + height > bmp.h) break;
-				} else if (config.translate.moveX) {
-					offsetX += config.translate.moveX;
-					if (offsetX + width > bmp.w) break;
-				} else {
-					break;
+				let moved = false;
+				if (moveX > 0 && anchorX < stopX || moveX < 0 && anchorX > stopX) {
+					anchorX += moveX;
+					moved = true;
 				}
+				if (moveY > 0 && anchorY < stopY || moveY < 0 && anchorY > stopY) {
+					anchorY += moveY;
+					moved = true;
+				}
+				if (!moved) break;
 			}
 		}
 

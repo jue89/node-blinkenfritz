@@ -52,17 +52,23 @@ test('Read multiple images', async () => {
 	expect(lastFrame).toBe(firstFrame);
 });
 
-test('Read moving images y', async () => {
+test('Read moving images y positive', async () => {
 	const g = new GameFrame({dir: path.join(__dirname, 'GameFrame.data.moveimgy')});
 	await new Promise((resolve) => g.once('prio', () => resolve()));
 	expect(g.frames.length).toBe(4);
 });
 
-test('Read moving images x', async () => {
+test('Read moving images x positive', async () => {
 	Date.now = () => 0;
 	const g = new GameFrame({dir: path.join(__dirname, 'GameFrame.data.moveimgx')});
 	await new Promise((resolve) => g.once('prio', () => resolve()));
 	expect(g.frames.length).toBe(28);
 	for (let i = 0; i < 27; i++) expect(g.getFrame().lastFrame).toBe(false);
 	expect(g.getFrame().lastFrame).toBe(true);
+});
+
+test('Read moving images y negative', async () => {
+	const g = new GameFrame({dir: path.join(__dirname, 'GameFrame.data.moveimgyneg')});
+	await new Promise((resolve) => g.once('prio', () => resolve()));
+	expect(g.frames.length).toBe(6);
 });
