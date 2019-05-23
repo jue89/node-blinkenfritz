@@ -92,6 +92,8 @@ class GameFrame extends Animation {
 		this.framePtr = 0;
 		this.loopPtr = 0;
 		this.loopDuration = opts.loopDuration || 8000;
+		this.offsetX = opts.offsetX || 0;
+		this.offsetY = opts.offsetY || 0;
 		if (opts.dir) this.parse(opts.dir).catch((e) => this.emit('error', e));
 	}
 
@@ -184,7 +186,12 @@ class GameFrame extends Animation {
 
 			// Convert BMP to canvas(es)
 			while (true) {
-				const canvas = new Canvas({width, height});
+				const canvas = new Canvas({
+					width,
+					height,
+					offsetX: this.offsetX,
+					offsetY: this.offsetY
+				});
 				for (let y = 0; y < height; y++) {
 					for (let x = 0; x < width; x++) {
 						canvas.setPixel(
