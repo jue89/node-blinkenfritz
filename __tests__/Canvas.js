@@ -92,11 +92,11 @@ test('Wrap around', () => {
 test('Handle offset', () => {
 	const width = 2;
 	const height = 2;
-	const c = new Canvas({width, height, offsetX: -1, offsetY: -1});
+	const c = new Canvas({width, height, offsetX: 1, offsetY: 1});
 	for (let x = 0; x < width; x++) {
 		for (let y = 0; y < height; y++) {
-			c.setPixel([x, y], [0, x, y]);
+			c.setPixel([x, y], [42, x, y]);
 		}
 	}
-	expect(c.getPixel([1, 1])).toMatchObject([0, 0, 0]);
+	expect(c.getPixel([1, 1])).toMatchObject([42, 0, 0]);
 });

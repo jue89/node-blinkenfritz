@@ -24,8 +24,8 @@ class Canvas {
 
 	getPixel ([x, y]) {
 		// Shift canvas
-		x += this.offsetX;
-		y += this.offsetY;
+		x -= this.offsetX;
+		y -= this.offsetY;
 
 		// Handle borders
 		if ((x >= this.width || x < 0) && !this.wrapX) return this.defaultColor;
